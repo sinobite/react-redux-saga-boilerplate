@@ -1,4 +1,5 @@
 build:
+	rm -rf www/static
 	npm run build
 
 start:

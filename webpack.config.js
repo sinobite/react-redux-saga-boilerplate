@@ -1,9 +1,20 @@
 const webpack = require('webpack')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 
 
+
+const pluginsDefault = [
+	new HtmlWebpackPlugin({
+		inject: true,
+		hash: true,
+		template: './src/index.html',
+		filename: 'index.html'
+	})
+]
 const pluginsProduction = [
+	...pluginsDefault,
 	new UglifyJsPlugin({
 		sourceMap: false,
 		uglifyOptions: {
@@ -20,6 +31,7 @@ const pluginsProduction = [
 	}),
 ]
 const pluginDevelopment = [
+	...pluginsDefault,
 	new webpack.HotModuleReplacementPlugin(),
 ]
 
@@ -41,8 +53,8 @@ module.exports = {
 	output: {
 		path: __dirname + '/www/static',
 		publicPath: '/',
-		filename: '[name].bundle.js',
-		chunkFilename: '[name].bundle.js',
+		filename: '[name].[hash].bundle.js',
+		chunkFilename: '[name].[hash].bundle.js',
 	},
 	devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : false,
 	plugins: process.env.NODE_ENV === 'production' ? pluginsProduction : pluginDevelopment,
@@ -51,8 +63,15 @@ module.exports = {
 		hot: true,
 	},
 	optimization: {
+		runtimeChunk: 'single',
 		splitChunks: {
-			chunks: 'all'
+			cacheGroups: {
+				vendor: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendors',
+					chunks: 'all'
+				}
+			}
 		}
 	}
 }
