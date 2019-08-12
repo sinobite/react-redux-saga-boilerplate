@@ -9,9 +9,10 @@ export function* getList1() {
 		]
 
 		// const list = axios.get('https://www.pinterest.ru/boards/1232/pins')
-        
+
 		yield put(setList1(list))
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		yield put(console.error('алярма', error))
 	}
 }
