@@ -37,9 +37,18 @@ const pluginDevelopment = [
 
 module.exports = {
 	mode: process.env.NODE_ENV || 'production',
-	entry: './src/index.js',
+	entry: './src/index.tsx',
 	module: {
 		rules: [
+			{
+				test: /\.ts(x?)$/,
+				exclude: /node_modules/,
+				use: [
+					{
+						loader: 'ts-loader'
+					}
+				]
+			},
 			{
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
@@ -48,7 +57,7 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx'],
+		extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
 	},
 	output: {
 		path: __dirname + '/www/static',
